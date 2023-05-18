@@ -51,7 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Image.asset("assets/icons/menu_item.png"),
         // title: Text(widget.title),
       ),
       body:
@@ -70,8 +72,11 @@ class _MyHomePageState extends State<MyHomePage> {
         itemBuilder: (_, itemIndex) {
           return TodoItemCell(
               item: items[itemIndex],
-              onUpdate: (bool isSelected) {
+              onUpdateCallback: (bool isSelected) {
+                // in flutter we can pass functions as callbacks to other widgets.
+                // this is a callback to update the array item
                 items[itemIndex].isSelected = isSelected;
+
               });
         },
         itemCount: items.length,
