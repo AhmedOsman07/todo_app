@@ -1,14 +1,31 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
-class DioClient {
+abstract class BaseNetworkLayer {
+  Future<dynamic> get(String uri,
+      {Map<String, dynamic>? queryParameters, Options? options, headers});
+
+  Future<dynamic> delete(String uri,
+      {Map<String, dynamic>? queryParameters, Options? options, headers});
+
+  Future<dynamic> post(String uri,
+      {data, Map<String, dynamic>? queryParameters, Options? options});
+
+  Future<dynamic> put(
+    String uri, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  });
+}
+
+class DioClient extends BaseNetworkLayer {
   // dio instance
   final Dio _dio;
 
   // injecting dio instance
   DioClient(this._dio);
 
-  // Get:-----------------------------------------------------------------------
+  @override
   Future<dynamic> get(String uri,
       {Map<String, dynamic>? queryParameters,
       Options? options,
@@ -26,6 +43,7 @@ class DioClient {
   }
 
   // delete:----------------------------------------------------------------------
+  @override
   Future<dynamic> delete(String uri,
       {Map<String, dynamic>? queryParameters,
       Options? options,
@@ -43,6 +61,7 @@ class DioClient {
   }
 
   // Post:----------------------------------------------------------------------
+  @override
   Future<dynamic> post(String uri,
       {data, Map<String, dynamic>? queryParameters, Options? options}) async {
     final Response response = await _dio.post(
@@ -55,6 +74,7 @@ class DioClient {
   }
 
   // put:----------------------------------------------------------------------
+  @override
   Future<dynamic> put(
     String uri, {
     data,

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:todo_app/model/todo_item_model.dart';
+import 'package:todo_app/ui/add_item/add_item.dart';
 
 import '../../data/network/api_repo.dart';
 import '../../main.dart';
@@ -30,20 +31,34 @@ class _MyHomePageState extends State<MyHomePage> {
     TodoItem(text: "Todo item 3"),
   ];
 
-  void floatingButtonTapped() {
-    // 1.TODO add navigation here to new page;
+  final Repository _repository = Repository();
 
-    // 2. TODO after creating new page on add todo item, invoke directly
-    // final String itemAdded =  await Repository().addItem("item");
+  @override
+  void initState() {
+    executeFetchingApi();
+    super.initState();
+  }
 
-    //3. TODO after invoking this line in new page google how to pop navigation with result and append to local array
+  void executeFetchingApi() {
+    // TODO try to fetch data
+    _repository.fetchTodoList().then((value) {
+      //TODO set items to value
+      // WidgetsBinding.instance.addPostFrameCallback is used for refreshing ui after building first time
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        setState(() {});
+      });
+    });
+  }
 
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
+  void floatingButtonTapped() async {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => const AddItemWidget()))
+        .then((value) {
+      //todo replace with executeFetchingApi to fetch new content if any data is added;
+      if (value != null) {
+        items.add(TodoItem(text: value));
+        setState(() {});
+      }
     });
   }
 
@@ -76,7 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 // in flutter we can pass functions as callbacks to other widgets.
                 // this is a callback to update the array item
                 items[itemIndex].isSelected = isSelected;
-
               });
         },
         itemCount: items.length,
